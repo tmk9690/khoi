@@ -17,10 +17,8 @@
 <body>
     <h1>Ứng Dụng Android TV Box</h1>
     <ul>
-        <li>📁 <a href="apks/">Apks</a></li>
-        <li>📁 <a href="kodi-plugins/">Plugins Kodi</a></li>
-        <li>📁 <a href="kodi-skins/">Skin Kodi</a></li>
-        <li>📁 <a href="vnmedia/">Plugin VNMedia Cho Kodi</a></li>
+        <li>📁 <a href="Apks/">Apks</a></li>
+        <li>📁 <a href="Kodi/">Kodi</a></li>
     </ul>
 </body>
 </html>
