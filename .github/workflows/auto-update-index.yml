@@ -7,7 +7,7 @@ on:
       - '**/*.zip'
       - '**/*.ZIP'
       - '**/*.apk'
-  workflow_dispatch: # This adds a "Run workflow" button in the Actions tab
+  workflow_dispatch: # Thêm dòng này để có nút "Run workflow" chạy bằng tay
 
 permissions:
   contents: write
