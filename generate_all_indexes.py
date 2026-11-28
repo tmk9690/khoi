@@ -1,63 +1,99 @@
-import os
+"""Chép toàn bộ repo sang _site/ và tạo index.html cho MỌI thư mục."""
+import html
+import shutil
+from pathlib import Path
+from urllib.parse import quote
 
-# Danh sách các thư mục cần tạo index (Bạn có thể thêm/bớt tùy ý)
-target_dirs = ['.', 'Apks', 'Kodi', 'Kodi/Plugin Phim']
+SOURCE = Path(".")
+OUTPUT = Path("_site")
+ROOT_TITLE = "Kho Lưu Trữ"
 
-def generate_index(directory):
-    if not os.path.exists(directory):
-        return
+# Những mục không đưa lên trang (ngoài các file/thư mục bắt đầu bằng dấu chấm)
+SKIP_ROOT = {"_site", "generate_all_indexes.py", "README.md"}
 
-    # Lấy tất cả các file trong thư mục
-    files = [f for f in os.listdir(directory) if os.path.isfile(os.path.join(directory, f))]
-    
-    # Lọc lấy file .zip và .apk (không phân biệt chữ hoa chữ thường)
-    valid_extensions = ('.zip', '.apk')
-    download_files = [f for f in files if f.lower().endswith(valid_extensions)]
-    
-    if not download_files:
-        return
+ICONS = {".apk": "📱", ".zip": "📦"}
 
-    # Tạo nội dung HTML với CSS cơ bản cho đẹp
-    html_content = f"""<!DOCTYPE html>
+PAGE = """<!DOCTYPE html>
 <html lang="vi">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Danh sách file - {directory}</title>
-    <style>
-        body {{ font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; padding: 20px; background-color: #f6f8fa; color: #24292f; }}
-        .container {{ max-width: 800px; margin: 0 auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }}
-        h2 {{ border-bottom: 1px solid #d0d7de; padding-bottom: 10px; margin-top: 0; }}
-        ul {{ list-style-type: none; padding: 0; }}
-        li {{ margin: 12px 0; padding: 10px; background: #f6f8fa; border-radius: 6px; border: 1px solid #d0d7de; }}
-        a {{ text-decoration: none; color: #0969da; font-weight: 500; display: block; word-break: break-all; }}
-        a:hover {{ text-decoration: underline; }}
-        .icon {{ margin-right: 8px; }}
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{title}</title>
+<style>
+body {{ font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; background: #f6f8fa; color: #24292f; }}
+h1 {{ font-size: 26px; border-bottom: 1px solid #d0d7de; padding-bottom: 12px; overflow-wrap: anywhere; }}
+ul {{ list-style: none; padding: 0; background: #fff; border: 1px solid #d0d7de; border-radius: 6px; }}
+li {{ display: flex; align-items: center; border-bottom: 1px solid #d0d7de; padding-left: 16px; }}
+li:last-child {{ border-bottom: none; }}
+li::before {{ content: attr(data-icon); margin-right: 10px; }}
+li a {{ flex: 1; padding: 14px 16px 14px 0; overflow-wrap: anywhere; }}
+a {{ color: #0969da; text-decoration: none; font-weight: 500; }}
+a:hover, a:focus {{ text-decoration: underline; }}
+</style>
 </head>
 <body>
-    <div class="container">
-        <h2>📁 Thư mục: /{directory}</h2>
-        <ul>
-"""
-    for file in sorted(download_files):
-        # Xác định icon dựa vào đuôi file
-        icon = "📦" if file.lower().endswith('.zip') else "📱"
-        html_content += f'        <li><a href="./{file}"><span class="icon">{icon}</span>{file}</a></li>\n'
-        
-    html_content += """    </ul>
-    </div>
+<h1>{title}</h1>
+{body}
+{back}
 </body>
-</html>"""
+</html>
+"""
 
-    # Ghi file index.html
-    index_path = os.path.join(directory, 'index.html')
-    with open(index_path, 'w', encoding='utf-8') as f:
-        f.write(html_content)
-    print(f"Đã tạo xong index cho thư mục: {directory}")
+
+def visible_entries(folder, is_root):
+    """Trả về (danh sách thư mục con, danh sách file) cần hiển thị."""
+    dirs, files = [], []
+    for item in folder.iterdir():
+        name = item.name
+        if name.startswith(".") or item.is_symlink():
+            continue
+        if is_root and name in SKIP_ROOT:
+            continue
+        if item.is_dir():
+            dirs.append(item)
+        elif name.lower() != "index.html":
+            files.append(item)
+    key = lambda p: p.name.casefold()
+    return sorted(dirs, key=key), sorted(files, key=key)
+
+
+def has_content(folder):
+    """Thư mục chỉ còn index.html cũ (hoặc rỗng) thì bỏ qua."""
+    dirs, files = visible_entries(folder, False)
+    return bool(files) or any(has_content(d) for d in dirs)
+
+
+def row(icon, name, is_dir):
+    slash = "/" if is_dir else ""
+    href = quote(name, safe="") + slash
+    # Chữ trong thẻ <a> phải đúng bằng tên file thì Kodi mới đọc được
+    text = html.escape(name, quote=False) + slash
+    return f'<li data-icon="{icon}"><a href="{href}">{text}</a></li>'
+
+
+def build(folder, target, is_root=True):
+    target.mkdir(parents=True, exist_ok=True)
+    dirs, files = visible_entries(folder, is_root)
+    rows = []
+
+    for d in dirs:
+        if has_content(d):
+            rows.append(row("📁", d.name, True))
+            build(d, target / d.name, False)
+
+    for f in files:
+        shutil.copy2(f, target / f.name)
+        rows.append(row(ICONS.get(f.suffix.lower(), "📄"), f.name, False))
+
+    title = ROOT_TITLE if is_root else "📁 " + html.escape(folder.name)
+    body = "<ul>\n" + "\n".join(rows) + "\n</ul>" if rows else "<p>Chưa có file.</p>"
+    back = "" if is_root else '<p><a href="../">← Về thư mục trước</a></p>'
+    page = PAGE.format(title=title, body=body, back=back)
+    (target / "index.html").write_text(page, encoding="utf-8")
+    print(f"Đã tạo: {target / 'index.html'} ({len(rows)} mục)")
+
 
 if __name__ == "__main__":
-    print("Bắt đầu quét và tạo index...")
-    for d in target_dirs:
-        generate_index(d)
+    shutil.rmtree(OUTPUT, ignore_errors=True)
+    build(SOURCE, OUTPUT)
     print("Hoàn tất!")
