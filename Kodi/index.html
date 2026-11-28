@@ -3,29 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kodi</title>
+    <title>📁 Kodi</title>
     <style>
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; line-height: 1.6; color: #333; max-width: 800px; margin: 0 auto; padding: 20px; background-color: #f6f8fa; }
-        h1 { border-bottom: 1px solid #eaecef; padding-bottom: 0.3em; color: #24292e; }
-        ul { list-style-type: none; padding-left: 0; background: #fff; border: 1px solid #e1e4e8; border-radius: 6px; }
-        li { padding: 12px 15px; border-bottom: 1px solid #e1e4e8; }
-        li:last-child { border-bottom: none; }
-        a { color: #0366d6; text-decoration: none; font-weight: 500; }
-        a:hover { text-decoration: underline; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background-color: #f6f8fa; padding: 20px; color: #24292f; }
+        h1 { font-size: 24px; font-weight: 600; line-height: 1.25; margin-bottom: 24px; }
+        .file-list { background: #ffffff; border: 1px solid #d0d7de; border-radius: 6px; overflow: hidden; }
+        .file-item { display: flex; align-items: center; padding: 12px 16px; border-bottom: 1px solid #d0d7de; text-decoration: none; color: #0969da; font-size: 16px; }
+        .file-item:last-child { border-bottom: none; }
+        .file-item:hover { background-color: #f6f8fa; }
+        .icon { margin-right: 10px; }
+        .back-link { display: inline-block; margin-top: 24px; color: #0969da; text-decoration: none; font-size: 16px; }
+        .back-link:hover { text-decoration: underline; }
     </style>
 </head>
 <body>
-    <h1>Kodi Addons & Skins</h1>
-    <ul>
-        <li>📁 <a href="Plugin%20Phim/">Plugin Phim</a></li>
-        <li>📦 <a href="plugin.video.daxem-0.0.6.zip">plugin.video.daxem-0.0.6.zip</a></li>
-        <li>📦 <a href="repo_adult.dobbeltina-1.0.4.zip">repo_adult.dobbeltina-1.0.4.zip</a></li>
-        <li>📦 <a href="repo_elementumorg-0.0.7.zip">repo_elementumorg-0.0.7.zip</a></li>
-        <li>📦 <a href="script.skinhelper-0.0.4.zip">script.skinhelper-0.0.4.zip</a></li>
-        <li>📦 <a href="skin.arctic.zephyr.2.resurrection.mod-Omega.zip">skin.arctic.zephyr.2.resurrection.mod-Omega.zip</a></li>
-        <li>📦 <a href="repository.jurialmunkey-3.4.zip">repository.jurialmunkey-3.4.zip</a></li>
-        <li>📦 <a href="a4kSubtitles-repository.zip">a4kSubtitles-repository.zip</a></li>
-    </ul>
-    <p><a href="../">⬅ Về trang chủ</a></p>
+    <h1>📁 Kodi</h1>
+    <div class="file-list">
+        <a href="a4kSubtitles-repository.zip" class="file-item"><span class="icon">📦</span>a4kSubtitles-repository.zip</a>
+        <a href="plugin.video.daxem-0.0.6.zip" class="file-item"><span class="icon">📦</span>plugin.video.daxem-0.0.6.zip</a>
+        <a href="repo_elementumorg-0.0.7.zip" class="file-item"><span class="icon">📦</span>repo_elementumorg-0.0.7.zip</a>
+        <a href="repository.jurialmunkey-3.4.zip" class="file-item"><span class="icon">📦</span>repository.jurialmunkey-3.4.zip</a>
+    </div>
+    <a href="../" class="back-link">← Về thư mục trước</a>
 </body>
 </html>
