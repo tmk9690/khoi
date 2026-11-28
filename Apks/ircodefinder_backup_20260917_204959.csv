@@ -1,0 +1,39 @@
+1;Máy Chiếu;Bật/Tắt;00FB38C7;0;false;NEC;Red;2
+26;Máy Chiếu;OK;00FB609F;1;false;NEC;Default;2
+32;Máy Chiếu;Trái;00FBE21D;2;false;NEC;Default;2
+28;Máy Chiếu;Phải;00FBE01F;3;false;NEC;Default;2
+11;Máy Chiếu;Volume +;00FBE01F;4;false;NEC;Default;2
+7;Máy Chiếu;Volume -;00FBE21D;5;false;NEC;Default;2
+3;Máy Chiếu;Up;00FB58A7;6;false;NEC;Default;2
+14;Máy Chiếu;Down;00FB12ED;7;false;NEC;Default;2
+21;Máy Chiếu;Back;00FB50AF;8;false;NEC;Default;2
+9;Máy Chiếu;Mute;00FB10EF;9;false;NEC;Default;2
+5;Máy Chiếu;Menu;00FB827D;10;false;NEC;Default;2
+17;Máy Chiếu;Input;00FBDA25;11;false;NEC;Default;2
+23;Máy Chiếu;Xoay màn hình;00FB9A65;12;false;NEC;Default;2
+31;Máy Chiếu;Freeze;00FB3DC2;13;false;NEC;Default;2
+19;Máy Chiếu;4D Keystone;00FB42BD;14;false;NEC;Default;2
+34;TV;Bật/Tắt;02FDD02F;0;false;NEC;Red;2
+40;TV;Menu;02FDA857;1;false;NEC;Default;2
+45;TV;Mute;02FD28D7;2;false;NEC;Default;2
+38;TV;Volume +;02FDC837;3;false;NEC;Default;2
+53;TV;Trái;02FDB44B;4;false;NEC;Default;2
+51;TV;Xuống;02FD34CB;5;false;NEC;Default;2
+55;TV;OK;02FDF40B;6;false;NEC;Default;2
+42;TV;Input;02FDF00F;7;false;NEC;Default;2
+47;TV;Màu sắc;02FD58A7;8;false;NEC;Default;2
+44;TV;Tỉ lệ;02FD9867;9;false;NEC;Default;2
+49;TV;Freeze;02FD847B;10;false;NEC;Default;2
+33;TV;Timer;02FDE817;11;false;NEC;Default;2
+35;02FD (5);D02F (11);02FDD02F;0;true;NEC;Default;2
+36;02FD (5);D02F (11);02FDD02F;0;true;NEC;Default;2
+37;02FD (5);D02F (11);02FDD02F;0;true;NEC;Default;2
+39;02FD (5);C837 (19);02FDC837;0;true;NEC;Default;2
+41;02FD (5);A857 (21);02FDA857;0;true;NEC;Default;2
+43;02FD (5);F00F (15);02FDF00F;0;true;NEC;Default;2
+46;02FD (5);28D7 (20);02FD28D7;0;true;NEC;Default;2
+48;02FD (5);58A7 (26);02FD58A7;0;true;NEC;Default;2
+50;02FD (5);847B (33);02FD847B;0;true;NEC;Default;2
+52;02FD (5);34CB (44);02FD34CB;0;true;NEC;Default;2
+54;02FD (5);B44B (45);02FDB44B;0;true;NEC;Default;2
+56;02FD (5);F40B (47);02FDF40B;0;true;NEC;Default;2
