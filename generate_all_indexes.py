@@ -1,33 +1,53 @@
-name: Auto Update All Index HTML
+import os
 
-on:
-  push:
-    branches: [ main ]
-    paths:
-      - '**/*.zip'
+# The directories you want to scan (add or remove as needed)
+target_dirs = ['.', 'Apks', 'Kodi', 'Kodi/Plugin Phim']
 
-permissions:
-  contents: write
+def generate_index(directory):
+    if not os.path.exists(directory):
+        return
 
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-      
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.10'
-          
-      - name: Run generate script
-        run: python generate_all_indexes.py
+    # Get all files in the directory
+    files = [f for f in os.listdir(directory) if os.path.isfile(os.path.join(directory, f))]
+    
+    # Filter for zip and apk files (case insensitive)
+    valid_extensions = ('.zip', '.apk')
+    download_files = [f for f in files if f.lower().endswith(valid_extensions)]
+    
+    if not download_files:
+        return
+
+    # Create HTML content
+    html_content = f"""<!DOCTYPE html>
+<html>
+<head>
+    <title>Index of {directory}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {{ font-family: Arial, sans-serif; padding: 20px; }}
+        ul {{ list-style-type: none; padding: 0; }}
+        li {{ margin: 10px 0; }}
+        a {{ text-decoration: none; color: #0366d6; font-size: 18px; }}
+        a:hover {{ text-decoration: underline; }}
+    </style>
+</head>
+<body>
+    <h1>Files in /{directory}</h1>
+    <ul>
+"""
+    for file in sorted(download_files):
+        html_content += f'        <li><a href="./{file}">{file}</a></li>\n'
         
-      - name: Commit and push changes
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add .
-          git diff --cached --quiet || git commit -m "Auto-update tat ca index.html"
-          git push
+    html_content += """    </ul>
+</body>
+</html>"""
+
+    # Write the HTML file
+    index_path = os.path.join(directory, 'index.html')
+    with open(index_path, 'w', encoding='utf-8') as f:
+        f.write(html_content)
+    print(f"Generated index for {directory}")
+
+if __name__ == "__main__":
+    for d in target_dirs:
+        generate_index(d)
