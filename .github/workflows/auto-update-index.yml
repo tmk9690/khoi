@@ -1,10 +1,10 @@
-name: Auto Update Index HTML
+name: Auto Update All Index HTML
 
 on:
   push:
-    branches: [ main ] # Hoặc master nếu nhánh chính của bạn là master
+    branches: [ main ]
     paths:
-      - 'Kodi/Plugin Phim/**'
+      - '**/*.zip' # Kích hoạt khi có BẤT KỲ file .zip nào được thêm vào ở bất kỳ đâu
 
 permissions:
   contents: write
@@ -21,15 +21,13 @@ jobs:
         with:
           python-version: '3.10'
           
-      - name: Run generate script
-        # Vì file generate_index.py của bạn đang nằm trong Kodi/Plugin Phim
-        # nên phải trỏ đúng đường dẫn tới file đó
-        run: python "Kodi/Plugin Phim/generate_index.py"
+      - name: Run generate script for all folders
+        run: python generate_all_indexes.py # Chạy file script tổng ở thư mục gốc
         
       - name: Commit and push changes
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add "Kodi/Plugin Phim/index.html"
-          git diff --cached --quiet || git commit -m "Auto-update index.html cho Plugin Phim"
+          git add .
+          git diff --cached --quiet || git commit -m "Auto-update tất cả index.html"
           git push
