@@ -1,12 +1,8 @@
 import os
 
-# Đường dẫn gốc của toàn bộ Repository
 base_dir = '.'
-
-# Các thư mục KHÔNG CẦN tạo index (ví dụ thư mục hệ thống)
 ignore_dirs = {'.git', '.github'}
 
-# Tùy chỉnh tiêu đề cho từng thư mục (Nếu thư mục không có trong danh sách này, nó sẽ lấy tên thư mục làm tiêu đề)
 custom_titles = {
     'Plugin Phim': '📁 Plugin Phim<br>(VNMedia & Kkphim)',
     'Kodi': '📁 Kodi',
@@ -36,46 +32,39 @@ html_template = """<!DOCTYPE html>
     <div class="file-list">
 """
 
-# Quét toàn bộ thư mục
 for dirpath, dirnames, filenames in os.walk(base_dir):
-    # Bỏ qua các thư mục trong danh sách ignore
     dirnames[:] = [d for d in dirnames if d not in ignore_dirs]
     
-    # Bỏ qua thư mục gốc (không tạo index cho thư mục chính)
     if dirpath == base_dir:
         continue
 
     folder_name = os.path.basename(dirpath)
     if not folder_name: continue
 
-    # Chỉ lấy các file (bỏ qua file index.html và các file ẩn)
+    subdirs = sorted([d for d in dirnames if d not in ignore_dirs])
     files_to_list = sorted([f for f in filenames if f != 'index.html' and not f.startswith('.')])
     
-    # Nếu thư mục trống thì bỏ qua
-    if not files_to_list:
+    if not subdirs and not files_to_list:
         continue
 
-    # Lấy tiêu đề (nếu có custom thì dùng, không thì lấy tên thư mục)
-    title = custom_titles.get(folder_name, f"📁 {folder_name}")
+    print(f"Đang xử lý thư mục: {folder_name} - Có {len(subdirs)} thư mục con, {len(files_to_list)} file.")
     
-    # Bắt đầu tạo HTML
+    title = custom_titles.get(folder_name, f"📁 {folder_name}")
     content = html_template.format(title=title)
     
-    # Thêm danh sách file
+    for d in subdirs:
+        content += f'        <a href="{d}/" class="file-item"><span class="icon">📁</span>{d}</a>\n'
+        
     for f in files_to_list:
-        # Gắn icon: File zip thì dùng hộp, file khác dùng tờ giấy
         icon = "📦" if f.lower().endswith('.zip') else "📄"
         content += f'        <a href="{f}" class="file-item"><span class="icon">{icon}</span>{f}</a>\n'
 
-    # Thêm nút quay lại
     content += """    </div>\n"""
     if dirpath != base_dir:
         content += '    <a href="../" class="back-link">← Về thư mục trước</a>\n'
     
     content += """</body>\n</html>"""
 
-    # Ghi đè file index.html vào thư mục tương ứng
     index_path = os.path.join(dirpath, 'index.html')
     with open(index_path, 'w', encoding='utf-8') as f:
         f.write(content)
-    print(f"Đã cập nhật: {index_path}")
